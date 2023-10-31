@@ -47,7 +47,11 @@ export default async function handle(
 
   const { time_start_in_minutes, time_end_in_minutes } = userAvailability
 
-  const starHour = time_start_in_minutes / 60
+  const starHour = time_start_in_minutes / 60 // 10
 
-  const endHour = time_end_in_minutes / 60
+  const endHour = time_end_in_minutes / 60 // 18
+
+  // [10, 11, 12, 13, 14, 15, 16, 17]
+
+  const possibleTimes = Array.from({ length: endHour - starHour })
 }
