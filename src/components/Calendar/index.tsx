@@ -34,7 +34,6 @@ export function Calendar() {
   const currentYear = currentDate.format('YYYY')
 
   const calendarWeeks = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const daysInMonthArray = Array.from({
       length: currentDate.daysInMonth(),
     }).map((_, i) => {
@@ -43,12 +42,15 @@ export function Calendar() {
 
     const firstWeekDay = currentDate.get('day')
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const previousMonthFillArray = Array.from({
       length: firstWeekDay,
     })
+      .map((_, i) => {
+        return currentDate.subtract(i + 1, 'day')
+      })
+      .reverse()
 
-    return firstWeekDay
+    return [...previousMonthFillArray, ...daysInMonthArray]
   }, [currentDate])
 
   console.log(calendarWeeks)
