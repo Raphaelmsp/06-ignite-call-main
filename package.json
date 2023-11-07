@@ -34,6 +34,6 @@
     "@rocketseat/eslint-config": "^2.1.0",
     "@types/cookie": "^0.5.1",
     "eslint-plugin-prettier": "^5.0.0",
-    "prisma": "^5.5.0"
+    "prisma": "^5.5.2"
   }
 }
