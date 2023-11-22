@@ -1,4 +1,4 @@
-import { prisma } from '@/src/lib/prisma'
+import { prisma } from '../../../../lib/prisma'
 import dayjs from 'dayjs'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -72,6 +72,8 @@ export default async function handle(
     },
   })
 
+  // gte significa: maior ou igual
+  // lte significa: menor ou igual
   // [8, 9, 10]
 
   const availableTimes = possibleTimes.filter((time) => {
