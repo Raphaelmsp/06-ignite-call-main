@@ -1,6 +1,6 @@
-import { prisma } from '../../../../lib/prisma'
 import dayjs from 'dayjs'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { prisma } from '../../../../lib/prisma'
 
 export default async function handle(
   req: NextApiRequest,
@@ -31,7 +31,7 @@ export default async function handle(
   const isPastDate = referenceDate.endOf('day').isBefore(new Date())
 
   if (isPastDate) {
-    return res.json({ availability: [] })
+    return res.json({ possibleTimes: [], availableTimes: [] })
   }
 
   const userAvailability = await prisma.userTimeInterval.findFirst({
@@ -42,16 +42,13 @@ export default async function handle(
   })
 
   if (!userAvailability) {
-    return res.json({ availability: [] })
+    return res.json({ possibleTimes: [], availableTimes: [] })
   }
 
   const { time_start_in_minutes, time_end_in_minutes } = userAvailability
 
-  const startHour = time_start_in_minutes / 60 // 10
-
-  const endHour = time_end_in_minutes / 60 // 18
-
-  // [10, 11, 12, 13, 14, 15, 16, 17]
+  const startHour = time_start_in_minutes / 60
+  const endHour = time_end_in_minutes / 60
 
   const possibleTimes = Array.from({ length: endHour - startHour }).map(
     (_, i) => {
@@ -72,15 +69,15 @@ export default async function handle(
     },
   })
 
-  // gte significa: maior ou igual
-  // lte significa: menor ou igual
-  // [8, 9, 10]
-
   const availableTimes = possibleTimes.filter((time) => {
-    return !blockedTimes.some(
+    const isTimeBlocked = blockedTimes.some(
       (blockedTime) => blockedTime.date.getHours() === time,
     )
+
+    const isTimeInPast = referenceDate.set('hour', time).isBefore(new Date())
+
+    return !isTimeBlocked && !isTimeInPast
   })
 
-  return res.json({ possibleTimes, availableTimes }) // att 07/11/2023
+  return res.json({ possibleTimes, availableTimes })
 }
